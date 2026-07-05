@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Python bytecode from running core/'s stdlib scripts
+__pycache__/
+
+# The dashboard is a build artifact, rebuilt from your projects/
+dashboard/index.html
+
+# Your real project data lives in your own private tracker, not here
+/projects/
