@@ -27,10 +27,19 @@ description: One line that says what this is.
 repo: ~/code/widget     # or: none
 updated: 2026-06-09
 autonomy: loop          # optional; only ever set via /vision, never assumed
-account: work           # optional; runs under CLAUDE_CONFIG_DIR_WORK, set by the human
+account: work           # REQUIRED when category is work; runs under CLAUDE_CONFIG_DIR_WORK
 blocked_on: waiting on X     # optional; the precondition the project waits on
 ---
 ```
+
+`account` pins which Claude profile the session runs under: `account: <name>`
+fires under `CLAUDE_CONFIG_DIR_<NAME>`. **A `category: work` project MUST set
+`account: work`.** Without it the session falls back to `CLAUDE_CONFIG_DIR` --
+the personal profile -- and would run work code under the personal account with
+nothing in the log to say so. The runner refuses to fire a work project that
+does not pin `account: work`, and refuses too when the matching
+`CLAUDE_CONFIG_DIR_<NAME>` is unset: firing under the wrong identity is worse
+than not firing.
 
 `blocked_on` parks a project without iceboxing it: the dashboard shows the
 blocker on the card and the runner refuses to fire while it is set. Set it
@@ -117,7 +126,8 @@ move on, never error on the missing remote.
    escalations. If you genuinely ran no commands, say so in one line rather
    than leaving stale output from a previous session.
 8. Rebuild the dashboard from the legwork repo:
-   `python3 core/build_dashboard.py`
+   `python3 core/build_dashboard.py` — on Windows use `python`, as there is
+   no python3 there beyond a stub that exits 9009 without running anything.
 9. Commit your changes with an honest message, then `git push` when the
    repo has a remote: it is shared with n8n and other machines, so never
    leave local tracker commits unpushed. Two graceful degradations: with no
